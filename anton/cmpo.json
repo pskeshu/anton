@@ -1,0 +1,8 @@
+{
+    "CMPO_0000094": {"name": "apoptotic cell phenotype", "features": ["apoptosis_markers", "nuclear_fragmentation"]},
+    "CMPO_0000140": {"name": "mitotic cell phenotype", "features": ["mitotic_figures", "chromatin_condensation"]},
+    "CMPO_0000077": {"name": "abnormal cell morphology phenotype", "features": ["abnormal_morphology", "nuclear_size"]},
+    "CMPO_0000098": {"name": "autophagic cell phenotype", "features": ["lc3_puncta"]},
+    "CMPO_0000123": {"name": "increased cell size phenotype", "features": ["increased_cell_size"]},
+    "CMPO_0000289": {"name": "increased stress fibers phenotype", "features": ["increased_stress_fibers"]}
+}
