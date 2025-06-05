@@ -1,0 +1,4 @@
+image_id,filename,compound,concentration,phenotype,cmpo_id
+001,image_001.tiff,DMSO,0.1%,control,CMPO_0000000
+002,image_002.tiff,staurosporine,1uM,apoptosis,CMPO_0000094
+003,image_003.tiff,nocodazole,10uM,mitotic_arrest,CMPO_0000140 

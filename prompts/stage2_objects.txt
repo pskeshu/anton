@@ -1,0 +1,7 @@
+Task: Identify major structures and suggest segmentation strategies for this fluorescence microscopy image.
+Input: [image, global context]
+Provide:
+1. List of detected objects/structures
+2. Segmentation guidance (e.g., nuclei, cytoplasm)
+3. Object count estimate
+Output format: Structured JSON with detected_objects, segmentation_guidance, object_count_estimate 

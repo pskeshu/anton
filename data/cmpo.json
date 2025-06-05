@@ -1,0 +1,17 @@
+{
+    "CMPO_0000000": {
+        "name": "control phenotype",
+        "features": ["normal morphology"],
+        "description": "No abnormal phenotype detected."
+    },
+    "CMPO_0000094": {
+        "name": "apoptotic cell phenotype",
+        "features": ["nuclear fragmentation", "chromatin condensation"],
+        "description": "Cells showing features of apoptosis."
+    },
+    "CMPO_0000140": {
+        "name": "mitotic arrest",
+        "features": ["mitotic figures", "arrested mitosis"],
+        "description": "Cells arrested in mitosis."
+    }
+} 

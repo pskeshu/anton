@@ -1,0 +1,9 @@
+Analyze this fluorescence microscopy image for overall scene understanding.
+Provide:
+1. Image quality assessment
+2. Staining type identification
+3. General cellular/tissue characteristics
+4. Recommended analysis approach
+
+Focus on: [DYNAMIC_CONTEXT]
+Output format: Natural language description + structured assessment 

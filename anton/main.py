@@ -1,17 +1,24 @@
-import argparse
-from pathlib import Path
 import logging
 import pandas as pd
+from pathlib import Path
 
 from anton.core.config import Config
 from anton.core.pipeline import AnalysisPipeline
 
 logging.basicConfig(level=logging.INFO)
 
-def main(goal, image_path, metadata_path=None, config_path=None):
-    """Main function for Anton CMPO phenotype analysis framework."""
+def main():
+    """Interactive main function for Anton CMPO phenotype analysis framework."""
+    print("Welcome to Anton: VLM-driven microscopy phenotype analysis framework.")
+    print("Please provide the following information:")
+
+    goal = input("Enter your analysis goal (e.g., 'Identify apoptotic cells in DAPI-stained channel 1'): ")
+    image_path = input("Enter the path to your TIFF image: ")
+    metadata_path = input("Enter the path to your metadata file (optional, press Enter to skip): ")
+    config_path = input("Enter the path to your config file (optional, press Enter to skip): ")
+
     # Load configuration
-    config = Config(config_path)
+    config = Config(config_path if config_path else None)
     config.set("goal", goal)
     config.set("image_path", str(image_path))
     if metadata_path:
@@ -27,10 +34,4 @@ def main(goal, image_path, metadata_path=None, config_path=None):
     df.to_csv("results.csv", index=False)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Anton CMPO phenotype analysis framework")
-    parser.add_argument("--goal", type=str, required=True, help="Analysis goal (e.g., 'Identify apoptotic cells in DAPI-stained channel 1')")
-    parser.add_argument("--image", type=str, required=True, help="Path to TIFF image")
-    parser.add_argument("--metadata", type=str, help="Path to metadata file (e.g., OME-XML)")
-    parser.add_argument("--config", type=str, help="Path to config file (JSON)")
-    args = parser.parse_args()
-    main(args.goal, args.image, args.metadata, args.config)
+    main()

@@ -1,0 +1,14 @@
+Task: Analyze segmented regions for complex CMPO features, focusing on texture-based patterns.
+Input:
+    - Region patches: [nuclei, cytoplasm patches]
+    - Config: {stain: "{STAIN}", channel: {CHANNEL}, phenotype_focus: "{PHENOTYPE}"}
+    - Target features: ["chromatin_condensation", "LC3_puncta", "nuclear_fragmentation"]
+Analyze:
+    1. Texture patterns (granular, smooth, fragmented)
+    2. Intensity distributions (bright spots, uniform, heterogeneous)
+    3. Morphological features (shape irregularities, size variations)
+Provide:
+    1. Feature descriptions with confidence scores
+    2. CMPO term mappings
+    3. Supporting visual evidence
+Output format: {features: [{name: str, confidence: float, evidence: str, cmpo_id: str}]} 

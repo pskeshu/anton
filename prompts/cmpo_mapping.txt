@@ -1,0 +1,17 @@
+Given this microscopy description: "{FREEFORM_DESCRIPTION}"
+Map relevant phrases to CMPO ontology terms.
+
+Available CMPO terms: {CMPO_CONTEXT}
+
+Output format:
+{
+    "mappings": [
+        {
+            "phrase": "nuclear fragmentation",
+            "cmpo_id": "CMPO_0000094",
+            "confidence": 0.95,
+            "reasoning": "Clear indication of apoptotic phenotype"
+        }
+    ]
+} 
+ 

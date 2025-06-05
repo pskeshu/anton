@@ -1,0 +1,9 @@
+Task: Analyze population-level patterns in this fluorescence microscopy image.
+Input:
+    - Feature analyses from segmented objects
+    - Config: {stain: "{STAIN}", channel: {CHANNEL}}
+Provide:
+    1. Population summary (e.g., prevalence of phenotypes)
+    2. Quantitative metrics (e.g., % of cells with phenotype)
+    3. Spatial patterns (e.g., clustering, distribution)
+Output format: {population_summary: str, quantitative_metrics: dict, cmpo_prevalence: dict, spatial_patterns: str} 
