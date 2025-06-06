@@ -208,17 +208,143 @@ Demo Files:
 └── test_vlm_providers.py  # VLM provider testing
 ```
 
-## Installation
+## Installation & Setup
 
-1. Clone the repository:
+### Prerequisites
+- Python 3.8+ (recommended: Python 3.10+)
+- pip package manager
+- Git
+
+### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/pskeshu/anton.git
 cd anton
 ```
 
-2. Install dependencies:
+### Step 2: Create Virtual Environment (Recommended)
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Linux/Mac:
+source venv/bin/activate
+# On Windows:
+# venv\Scripts\activate
+```
+
+### Step 3: Install Dependencies
 ```bash
 pip install -r requirements.txt
+```
+
+**Core Dependencies:**
+- `pandas` - Data manipulation and analysis
+- `numpy` - Numerical computing
+- `scikit-image` - Image processing
+- `pillow` - Image handling
+- `opencv-python` - Computer vision
+- `scipy` - Scientific computing
+- `requests` - HTTP requests
+- `google-generativeai` - Gemini API
+- `anthropic` - Claude API
+
+### Step 4: Configure API Keys
+
+Anton supports multiple VLM providers. You need at least one API key:
+
+#### Option A: Get a Gemini API Key (Recommended - Free tier available)
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click "Create API Key" 
+4. Copy your API key
+
+#### Option B: Get an Anthropic Claude API Key
+1. Visit [Anthropic Console](https://console.anthropic.com/)
+2. Sign up and verify your account
+3. Navigate to "API Keys" section
+4. Create a new API key
+5. Copy your API key
+
+#### Option C: Use OpenAI GPT-4V (requires OpenAI key)
+1. Visit [OpenAI API](https://platform.openai.com/api-keys)
+2. Create account and add billing information
+3. Create new API key
+
+### Step 5: Set Up Environment Variables
+
+Create a `.env` file in the project root:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` file with your API key(s):
+```bash
+# For Gemini (Google AI)
+GOOGLE_API_KEY="your-actual-gemini-api-key-here"
+
+# For Claude (Anthropic) - optional
+ANTHROPIC_API_KEY="your-actual-claude-api-key-here"
+
+# For OpenAI GPT-4V - optional
+OPENAI_API_KEY="your-actual-openai-api-key-here"
+```
+
+### Step 6: Verify Installation
+
+Test your setup with a quick verification:
+```bash
+# Test basic import
+python -c "import anton; print('✅ Anton imported successfully')"
+
+# Test API key configuration
+python -c "
+import os
+from dotenv import load_dotenv
+load_dotenv()
+if os.getenv('GOOGLE_API_KEY'): print('✅ Gemini API key configured')
+if os.getenv('ANTHROPIC_API_KEY'): print('✅ Claude API key configured')
+if not any([os.getenv('GOOGLE_API_KEY'), os.getenv('ANTHROPIC_API_KEY')]): 
+    print('⚠️ No API keys configured - demos will run in mock mode')
+"
+
+# Run quick demo to test everything
+python quick_demo.py
+```
+
+### Step 7: Download Sample Data (Optional)
+
+For testing with real microscopy data:
+```bash
+# The BBBC013 dataset will be downloaded automatically when needed
+# Or manually download sample images:
+mkdir -p data/sample_images
+# Place your .tif, .png, or .bmp microscopy images in data/sample_images/
+```
+
+### Troubleshooting
+
+**Import Error**: If you get import errors, ensure you're in the virtual environment:
+```bash
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate     # Windows
+```
+
+**API Key Issues**: Verify your `.env` file is in the project root and contains valid keys:
+```bash
+cat .env  # Should show your API keys
+```
+
+**Permission Error**: On some systems, you might need:
+```bash
+pip install --user -r requirements.txt
+```
+
+**Missing Dependencies**: For additional computer vision features:
+```bash
+# Optional: For advanced segmentation (if available)
+pip install cellpose stardist-tensorflow
 ```
 
 ## Usage
