@@ -1,9 +1,10 @@
 Task: Analyze population-level patterns in this fluorescence microscopy image.
 Input:
-    - Feature analyses from segmented objects
-    - Config: {stain: "{STAIN}", channel: {CHANNEL}}
+    - Individual cell feature analyses (morphology, intensity, localization patterns)
+    - Experimental context and biological metadata
 Provide:
-    1. Population summary (e.g., prevalence of phenotypes)
-    2. Quantitative metrics (e.g., % of cells with phenotype)
-    3. Spatial patterns (e.g., clustering, distribution)
-Output format: {population_summary: str, quantitative_metrics: dict, cmpo_prevalence: dict, spatial_patterns: str} 
+    1. Population summary describing overall cellular characteristics and phenotype prevalence
+    2. Quantitative estimates (e.g., percentage of cells showing specific phenotypes)
+    3. Biological interpretation of patterns in experimental context
+    4. CMPO phenotype relevance assessment
+Output format: Natural language biological analysis with structured sections for population summary, quantitative insights, and biological interpretation 

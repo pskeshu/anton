@@ -2,6 +2,58 @@
 
 Anton is a sophisticated microscopy image analysis tool that combines traditional computer vision techniques with Vision Language Models (VLM) for comprehensive cellular phenotype analysis.
 
+## 🚀 Quick Start / Demo
+
+**Want to see Anton in action right now?** Choose your demo:
+
+### 30-Second Quick Demo
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run quick demo (30 seconds)
+python quick_demo.py
+```
+
+### Full Interactive Demo  
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run comprehensive demo (2-3 minutes)
+python demo.py
+```
+
+### Streamlit Web Interface
+```bash
+# Launch interactive web UI
+streamlit run anton_simple_ui.py
+```
+**What you'll see:** Web interface with image upload, zoom controls, real-time VLM analysis, and CMPO phenotype classification.
+
+### Test Suite
+```bash
+# Run all tests to verify functionality
+python tests/run_tests.py
+```
+
+### CMPO Mapping Demo
+```bash
+# Explore CMPO ontology integration
+cd anton/cmpo
+python examples.py
+
+# Or from project root:
+python -m anton.cmpo.examples
+```
+**What you'll see:** Advanced semantic mapping of biological descriptions to standardized CMPO terms with biological accuracy validation.
+
+**What you'll see:** Anton analyzing a real fluorescence microscopy image through its 4-stage pipeline:
+1. 🔍 **Global Scene Understanding** (VLM analyzes overall image quality and content)
+2. 🎯 **Object Detection & Segmentation Guidance** (VLM identifies structures and suggests methods)  
+3. 🧬 **Feature-Level Analysis** (Detailed analysis of detected objects)
+4. 📊 **Population-Level Insights** (Summary statistics and phenotype prevalence)
+
 ## Features
 
 - **Hybrid Analysis Pipeline**
@@ -24,11 +76,12 @@ Anton is a sophisticated microscopy image analysis tool that combines traditiona
   - Spatial relationships (neighborhood analysis)
   - Population-level insights
 
-- **CMPO Integration**
-  - Automatic phenotype mapping
-  - Ontology-based validation
-  - Confidence scoring
-  - Export capabilities (CSV, JSON)
+- **Advanced CMPO Integration** 🧬
+  - **399 Official CMPO Terms**: Full .obo ontology with semantic relations
+  - **Ontology-Aware Mapping**: Multi-token exact matching prioritized over fuzzy similarity  
+  - **Biological Accuracy**: Prevents impossible mappings (e.g., G2 arrested ≠ metaphase arrested)
+  - **Two-Stage Pipeline**: Candidate generation → VLM biological reasoning validation
+  - **Evidence Tracking**: Full provenance for mapping decisions with confidence scoring
 
 ## Architecture Overview
 
@@ -130,14 +183,33 @@ anton/
 │   └── qualitative.py   # VLM-driven analysis with feature extraction
 ├── cmpo/
 │   ├── ontology.py      # CMPO ontology management and lookup
-│   └── mapping.py       # Phenotype mapping and validation
+│   ├── mapping.py       # Phenotype mapping and validation
+│   └── examples.py      # CMPO demonstration examples
 ├── vlm/
 │   └── interface.py     # VLM integration for qualitative analysis
 ├── core/
 │   ├── pipeline.py      # Main analysis pipeline orchestration
 │   └── config.py        # Configuration management
-├── utils/              # Utility functions
-└── examples/           # Usage examples
+└── utils/
+    ├── image_io.py      # Image loading and preprocessing
+    └── validation.py    # Data validation utilities
+
+examples/
+├── basic_analysis.py    # Basic usage examples
+└── phenotype_detection.py  # Phenotype detection workflows
+
+tests/
+├── test_pipeline.py     # Pipeline integration tests
+├── test_qualitative_analysis.py  # VLM analysis tests
+└── test_vlm_interface.py  # VLM interface tests
+
+Demo Files:
+├── anton_simple_ui.py   # Streamlit web interface
+├── anton_visual_analysis.ipynb  # Jupyter notebook analysis
+├── bbbc013_demo.py      # BBBC013 dataset demonstration
+├── demo.py              # Comprehensive demo
+├── quick_demo.py        # Quick 30-second demo
+└── test_vlm_providers.py  # VLM provider testing
 ```
 
 ## Installation

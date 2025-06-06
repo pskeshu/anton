@@ -35,17 +35,115 @@ class CMPOOntology:
     def _download_and_process_cmpo(self):
         """Download CMPO from official repository and convert to JSON"""
         try:
-            # Option 1: Use OLS API (Ontology Lookup Service)
-            self._download_from_ols()
+            # Option 1: Parse OBO file directly (preferred for rich semantic info)
+            self._download_and_parse_obo()
         except Exception as e:
-            logging.warning(f"Failed to download from OLS: {e}")
+            logging.warning(f"Failed to download OBO: {e}")
             try:
-                # Option 2: Parse OWL file directly
-                self._download_owl_file()
+                # Option 2: Use OLS API (Ontology Lookup Service)
+                self._download_from_ols()
             except Exception as e2:
-                logging.error(f"Failed to download OWL: {e2}")
-                # Option 3: Use minimal hardcoded ontology
-                self._create_minimal_ontology()
+                logging.warning(f"Failed to download from OLS: {e2}")
+                try:
+                    # Option 3: Parse OWL file directly
+                    self._download_owl_file()
+                except Exception as e3:
+                    logging.error(f"Failed to download OWL: {e3}")
+                    # Option 4: Use minimal hardcoded ontology
+                    self._create_minimal_ontology()
+    
+    def _download_and_parse_obo(self):
+        """Download and parse CMPO OBO file for rich semantic information"""
+        obo_url = "https://raw.githubusercontent.com/EBISPOT/CMPO/master/cmpo.obo"
+        
+        logging.info(f"Downloading CMPO OBO file from {obo_url}")
+        response = requests.get(obo_url)
+        response.raise_for_status()
+        
+        # Parse OBO content
+        ontology_data = self._parse_obo_content(response.text)
+        
+        # Save processed data
+        self.data_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.data_path, 'w') as f:
+            json.dump(ontology_data, f, indent=2)
+        
+        self.ontology = ontology_data
+        logging.info(f"Successfully loaded {len(ontology_data)} CMPO terms")
+    
+    def _parse_obo_content(self, obo_text: str) -> Dict:
+        """Parse OBO format text into structured data"""
+        ontology_data = {}
+        current_term = None
+        current_term_id = None
+        
+        for line in obo_text.split('\n'):
+            line = line.strip()
+            
+            if line == '[Term]':
+                # Save previous term if exists
+                if current_term and current_term_id:
+                    ontology_data[current_term_id] = current_term
+                # Start new term
+                current_term = {
+                    'name': '',
+                    'description': '',
+                    'synonyms': [],
+                    'features': [],
+                    'parent_terms': [],
+                    'subclass_of': [],
+                    'equivalent_to': [],
+                    'subset': [],
+                    'xrefs': [],
+                    'iri': ''
+                }
+                current_term_id = None
+                
+            elif line.startswith('id:') and current_term is not None:
+                current_term_id = line.split(':', 1)[1].strip()
+                current_term['iri'] = f"http://purl.obolibrary.org/obo/{current_term_id.replace(':', '_')}"
+                
+            elif line.startswith('name:') and current_term is not None:
+                current_term['name'] = line.split(':', 1)[1].strip()
+                
+            elif line.startswith('def:') and current_term is not None:
+                # Extract definition (remove quotes and references)
+                def_text = line.split(':', 1)[1].strip()
+                if def_text.startswith('"') and '" [' in def_text:
+                    current_term['description'] = def_text.split('" [')[0][1:]
+                else:
+                    current_term['description'] = def_text
+                    
+            elif line.startswith('synonym:') and current_term is not None:
+                # Extract synonym text (format: synonym: "text" EXACT [])
+                syn_text = line.split(':', 1)[1].strip()
+                if syn_text.startswith('"'):
+                    synonym = syn_text.split('"')[1]
+                    current_term['synonyms'].append(synonym)
+                    
+            elif line.startswith('is_a:') and current_term is not None:
+                # Extract parent term ID
+                parent = line.split(':', 1)[1].strip().split('!')[0].strip()
+                current_term['parent_terms'].append(parent)
+                current_term['subclass_of'].append(parent)
+                
+            elif line.startswith('equivalent_to:') and current_term is not None:
+                equiv = line.split(':', 1)[1].strip()
+                current_term['equivalent_to'].append(equiv)
+                
+            elif line.startswith('subset:') and current_term is not None:
+                subset = line.split(':', 1)[1].strip()
+                current_term['subset'].append(subset)
+                
+            elif line.startswith('xref:') and current_term is not None:
+                xref = line.split(':', 1)[1].strip()
+                current_term['xrefs'].append(xref)
+        
+        # Don't forget the last term
+        if current_term and current_term_id:
+            ontology_data[current_term_id] = current_term
+            
+        return ontology_data
     
     def _download_from_ols(self):
         """Download CMPO terms using OLS REST API"""
