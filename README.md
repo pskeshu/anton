@@ -1,4 +1,4 @@
-# Anton - Advanced Microscopy Analysis Tool
+# Anton - AI-Powered Microscopy Phenotype Analysis Framework
 
 Anton is a sophisticated microscopy image analysis tool that combines traditional computer vision techniques with Vision Language Models (VLM) for comprehensive cellular phenotype analysis.
 
@@ -87,91 +87,86 @@ python -m anton.cmpo.examples
 
 ```mermaid
 graph TB
-    %% User Input
-    User[👤 User Input<br/>Goal + Image + Config] --> Pipeline[🔄 AnalysisPipeline<br/>Core Orchestration]
+    %% User Input & Configuration
+    User[👤 User Input<br/>Image + Config] --> Pipeline[🔄 AnalysisPipeline<br/>Sequential 4-Stage Orchestration]
+    Config[⚙️ Configuration<br/>VLM Provider + Biological Context] --> Pipeline
     
-    %% Core Pipeline branching to two main analysis paths
-    Pipeline --> VLM_Path[🧠 VLM Analysis Path]
-    Pipeline --> CV_Path[🔬 Computer Vision Path]
+    %% Image Loading
+    Pipeline --> ImageLoader[📸 ImageLoader<br/>PIL/numpy processing]
     
-    %% VLM Analysis Pipeline (4 stages)
-    VLM_Path --> Stage1[🌍 Stage 1: Global Scene<br/>Image quality, staining, characteristics]
-    Stage1 --> Stage2[🎯 Stage 2: Object Detection<br/>Structure identification, segmentation guidance]
-    Stage2 --> Stage3[🔍 Stage 3: Feature Analysis<br/>Texture patterns, CMPO mapping]
-    Stage3 --> Stage4[📊 Stage 4: Population Insights<br/>Prevalence, spatial patterns]
+    %% Sequential 4-Stage VLM Pipeline
+    ImageLoader --> Stage1[🌍 Stage 1: Global Scene<br/>VLM analyzes image quality & content]
+    Stage1 --> Validate1[✅ Validation Gate]
+    Validate1 --> Stage2[🎯 Stage 2: Object Detection<br/>VLM identifies structures & guides segmentation]
+    Stage2 --> Validate2[✅ Validation Gate]
+    Validate2 --> Stage3[🔍 Stage 3: Feature Analysis<br/>VLM analyzes individual objects]
+    Stage3 --> Validate3[✅ Validation Gate]
+    Validate3 --> Stage4[📊 Stage 4: Population Insights<br/>VLM summarizes + CMPO integration]
     
-    %% VLM Interface
-    Stage1 -.-> VLM[🤖 VLM Interface<br/>Claude-3/GPT-4V]
-    Stage2 -.-> VLM
-    Stage3 -.-> VLM
-    Stage4 -.-> VLM
+    %% VLM Interface (shared across all stages)
+    VLM[🤖 VLM Interface<br/>Claude/GPT-4V/Gemini<br/>Base64 Image + Prompts] 
+    Stage1 <-.-> VLM
+    Stage2 <-.-> VLM
+    Stage3 <-.-> VLM
+    Stage4 <-.-> VLM
     
-    %% Computer Vision Path
-    CV_Path --> Segmentation[⚙️ Segmentation Strategies]
-    Segmentation --> Cellpose[🧬 Cellpose<br/>Deep Learning]
-    Segmentation --> StarDist[⭐ StarDist<br/>Deep Learning]
-    Segmentation --> Traditional[📐 Traditional CV<br/>Otsu, Watershed, Edge]
+    %% Results Caching System
+    Stage1 --> Cache1[💾 Cache: stage_1_global]
+    Stage2 --> Cache2[💾 Cache: stage_2_objects]
+    Stage3 --> Cache3[💾 Cache: stage_3_features]
+    Stage4 --> Cache4[💾 Cache: stage_4_population]
     
-    %% Feature Extraction
-    Cellpose --> Features[📏 Feature Extraction]
-    StarDist --> Features
-    Traditional --> Features
+    %% CMPO Integration (Two-Stage Process)
+    Stage1 --> CMPO_Global[🧬 CMPO Mapping<br/>Global Scene → Phenotypes]
+    Stage4 --> CMPO_Population[🧬 CMPO Mapping<br/>Population → Phenotypes]
     
-    Features --> Morphological[📊 Morphological<br/>Area, perimeter, shape]
-    Features --> Intensity[💡 Intensity<br/>Mean, std, distribution]
-    Features --> Texture[🌐 Texture<br/>Haralick, LBP]
-    Features --> Spatial[📍 Spatial<br/>Neighborhood analysis]
+    CMPO_Global --> CMPOOntology[🗃️ CMPO Ontology<br/>399 Official Terms + Relations]
+    CMPO_Population --> CMPOOntology
     
-    %% CMPO Integration
-    Stage3 --> CMPO[🗃️ CMPO Ontology]
-    Features --> CMPO
+    %% Two-Stage CMPO Process
+    CMPOOntology --> CMPOStage1[🔍 Stage 1: Ontology Mapping<br/>Direct + Semantic + Hierarchical]
+    CMPOStage1 --> CMPOStage2[🧠 Stage 2: VLM Validation<br/>Biological Reasoning + Plausibility]
+    CMPOStage2 --> CMPOResults[🏷️ Validated CMPO Terms<br/>Confidence + Evidence Tracking]
     
-    CMPO --> OLS[🌐 OLS API Download]
-    CMPO --> OWL[📄 OWL File Parsing]
-    CMPO --> Cache[💾 Intelligent Caching]
-    CMPO --> Phenotypes[🏷️ Phenotype Database<br/>CMPO_0000094: Apoptosis<br/>CMPO_0000140: Mitosis<br/>CMPO_0000077: Abnormal morphology]
+    %% Separate Quantitative Analysis Path (Standalone)
+    QuantPath[🔬 Quantitative Analyzer<br/>Standalone Traditional CV]
+    QuantPath --> QuantSeg[⚙️ Segmentation Options<br/>Threshold/Watershed/Edge/Cellpose/StarDist]
+    QuantSeg --> QuantFeatures[📊 Feature Extraction<br/>Morphological + Intensity + Texture + Spatial]
+    QuantFeatures --> QuantResults[📈 Quantitative Results<br/>DataFrames + Statistics]
     
-    %% Hybrid Analysis & Cross-validation
-    Stage4 --> Hybrid[🔀 Hybrid Analysis]
-    Spatial --> Hybrid
+    %% Final Results Integration
+    Cache4 --> FinalResults[📋 Final Results<br/>VLM Analysis + CMPO Mappings]
+    CMPOResults --> FinalResults
     
-    Hybrid --> CrossVal[✅ Cross-Validation<br/>Quantitative ↔ Qualitative]
-    Hybrid --> Confidence[📈 Confidence Scoring]
-    Hybrid --> Agreement[🤝 Agreement Metrics]
+    %% Output Formats
+    FinalResults --> OutputJSON[📄 JSON Export<br/>Complete pipeline results]
+    FinalResults --> OutputSummary[📝 Analysis Summary<br/>Human-readable report]
+    QuantResults --> OutputCSV[📊 CSV Export<br/>Feature measurements]
     
-    %% Results & Output
-    CrossVal --> Results[📋 Results]
-    Confidence --> Results
-    Agreement --> Results
+    %% Biological Context Integration
+    BioContext[🧪 Biological Context<br/>Experiment type, cell line, proteins] --> VLM
+    Prompts[📝 Stage-Specific Prompts<br/>Structured templates] --> VLM
     
-    Results --> JSON[📄 JSON Export<br/>Full analysis results]
-    Results --> CSV[📊 CSV Export<br/>Feature tables]
-    Results --> Pandas[🐼 Pandas DataFrames<br/>Structured data]
-    
-    %% Configuration & Prompts
-    Config[⚙️ Configuration<br/>JSON-based settings] --> Pipeline
-    Prompts[📝 Structured Prompts<br/>Stage-specific templates] --> VLM
-    
-    %% Async Processing
-    VLM --> Async[⚡ Async Processing<br/>Batch optimization<br/>Intelligent caching]
+    %% Error Handling & Fallbacks
+    VLM --> ErrorHandling[⚠️ Error Handling<br/>Graceful degradation + fallbacks]
     
     %% Styling
     classDef userInput fill:#e1f5fe
     classDef pipeline fill:#f3e5f5
     classDef vlm fill:#fff3e0
-    classDef cv fill:#e8f5e8
+    classDef quantitative fill:#e8f5e8
     classDef cmpo fill:#e3f2fd
-    classDef hybrid fill:#fce4ec
     classDef results fill:#f1f8e9
     classDef config fill:#fafafa
+    classDef cache fill:#f0f0f0
     
-    class User,Config userInput
-    class Pipeline pipeline
-    class VLM_Path,Stage1,Stage2,Stage3,Stage4,VLM,Async,Prompts vlm
-    class CV_Path,Segmentation,Cellpose,StarDist,Traditional,Features,Morphological,Intensity,Texture,Spatial cv
-    class CMPO,OLS,OWL,Cache,Phenotypes cmpo
-    class Hybrid,CrossVal,Confidence,Agreement hybrid
-    class Results,JSON,CSV,Pandas results
+    class User,Config,BioContext userInput
+    class Pipeline,ImageLoader,Validate1,Validate2,Validate3 pipeline
+    class Stage1,Stage2,Stage3,Stage4,VLM,Prompts,ErrorHandling vlm
+    class QuantPath,QuantSeg,QuantFeatures,QuantResults quantitative
+    class CMPO_Global,CMPO_Population,CMPOOntology,CMPOStage1,CMPOStage2,CMPOResults cmpo
+    class FinalResults,OutputJSON,OutputSummary,OutputCSV results
+    class Cache1,Cache2,Cache3,Cache4 cache
 ```
 
 ## Project Structure
@@ -195,6 +190,7 @@ anton/
     └── validation.py    # Data validation utilities
 
 examples/
+├── README.md            # Examples documentation
 ├── basic_analysis.py    # Basic usage examples
 └── phenotype_detection.py  # Phenotype detection workflows
 
@@ -230,15 +226,17 @@ pip install -r requirements.txt
 Basic usage example:
 
 ```python
-from anton.core.pipeline import AntonPipeline
+from anton.core.pipeline import AnalysisPipeline
 from anton.vlm.interface import VLMInterface
 
 # Initialize components
-vlm = VLMInterface()
-pipeline = AntonPipeline(vlm, config={})
+config = {'vlm_provider': 'claude', 'channels': [0]}
+pipeline = AnalysisPipeline(config)
 
 # Run analysis
-results = await pipeline.analyze_image("path/to/image.tif", "detect_cell_death")
+results = await pipeline.run_pipeline("path/to/image.tif")
+# Or synchronously:
+results = pipeline.run_pipeline_sync("path/to/image.tif")
 ```
 
 ### Quantitative Analysis
