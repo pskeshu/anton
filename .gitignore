@@ -1,25 +1,66 @@
- __pycache__/
- *.pyc
- *.pyo
- *.pyd
- .Python
- *.egg-info/
- dist/
- build/
- 
- # Virtual environments
- venv/
- env/
- .venv/
- 
- # IDEs
- .vscode/
- .idea/
- 
- # Miscellaneous
- *.log
- *.csv
- *.DS_Store
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Environment variables
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Data files - exclude all data
+data/
+*.zip
+*.tar.gz
+*.csv
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.bmp
+
+# Results and analysis outputs
+results/
+*.json
+*.pkl
+*.h5
+
+# Session and temporary files
+SESSION_NOTES.md
+*session*
+*temp*
+*tmp*
+.ipynb_checkpoints/
+
+# Environment and config
 .env
+.envrc
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

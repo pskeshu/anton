@@ -8,3 +8,6 @@ requests
 google-generativeai
 anthropic
 python-dotenv
+streamlit
+plotly
+networkx
