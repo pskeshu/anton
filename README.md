@@ -406,18 +406,26 @@ Anton is organized into focused directories for easy navigation:
 
 ```
 anton/
-├── 🧬 anton/           # Core framework (VLM pipeline, CMPO mapping)
-├── 📊 scripts/         # Analysis scripts
-│   ├── bbbc013/        # BBBC013 dataset tools
-│   ├── bbbc021/        # BBBC021 compound screen analysis  
-│   ├── demos/          # Demo and testing scripts
-│   └── utilities/      # General utilities and legacy tools
-├── 📚 examples/        # Usage examples and tutorials
-├── 🎯 prompts/         # VLM prompt templates (4-stage pipeline)
-├── 🧪 tests/           # Test suite
-└── 📖 docs/            # Documentation
+├── 🧬 anton/                    # Core Anton Framework
+│   ├── analysis/               # Analysis engines (qualitative.py, quantitative.py)
+│   ├── cmpo/                   # CMPO ontology integration with semantic mapping
+│   ├── core/                   # Pipeline orchestration and configuration
+│   ├── utils/                  # Image I/O and validation utilities
+│   └── vlm/                    # Vision Language Model interface
+├── 📊 scripts/                  # Analysis Scripts
+│   ├── bbbc013/                # BBBC013 dataset analysis tools
+│   ├── bbbc021/                # BBBC021 compound screen analysis
+│   ├── demos/                  # Demo and testing scripts
+│   └── utilities/              # General utilities and legacy tools
+├── 📚 examples/                 # Usage examples and tutorials
+├── 🎯 prompts/                  # VLM prompt templates (4-stage pipeline)
+├── 🧪 tests/                    # Test suite infrastructure
+├── 📖 docs/                     # Documentation
+├── 📋 DIRECTORY_STRUCTURE.md    # Complete navigation guide
+├── 📄 README.md                 # This file
+└── ⚙️ requirements.txt          # Python dependencies
 
-# Data and results are gitignored:
+# Excluded from git (download scripts available):
 # data/     - Datasets (BBBC013, BBBC021, sample images)
 # results/  - Analysis outputs and reports
 ```
