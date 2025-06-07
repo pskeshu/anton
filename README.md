@@ -12,7 +12,7 @@ Anton is a sophisticated microscopy image analysis tool that combines traditiona
 source venv/bin/activate
 
 # Run quick demo (30 seconds)
-python quick_demo.py
+python scripts/utilities/quick_demo.py
 ```
 
 ### Full Interactive Demo  
@@ -21,13 +21,13 @@ python quick_demo.py
 source venv/bin/activate
 
 # Run comprehensive demo (2-3 minutes)
-python demo.py
+python scripts/demos/demo.py
 ```
 
 ### Streamlit Web Interface
 ```bash
 # Launch interactive web UI
-streamlit run anton_simple_ui.py
+streamlit run scripts/demos/anton_simple_ui.py
 ```
 **What you'll see:** Web interface with image upload, zoom controls, real-time VLM analysis, and CMPO phenotype classification.
 
@@ -37,16 +37,16 @@ streamlit run anton_simple_ui.py
 python tests/run_tests.py
 ```
 
-### CMPO Mapping Demo
+### CMPO Semantic Mapping Demo
 ```bash
-# Explore CMPO ontology integration
+# Explore semantic CMPO mapping (latest feature)
+python scripts/demos/demo_semantic_mapping.py
+
+# Traditional CMPO integration
 cd anton/cmpo
 python examples.py
-
-# Or from project root:
-python -m anton.cmpo.examples
 ```
-**What you'll see:** Advanced semantic mapping of biological descriptions to standardized CMPO terms with biological accuracy validation.
+**What you'll see:** Advanced semantic mapping of biological descriptions to standardized CMPO terms with biological reasoning validation that eliminates false positives.
 
 **What you'll see:** Anton analyzing a real fluorescence microscopy image through its 4-stage pipeline:
 1. 🔍 **Global Scene Understanding** (VLM analyzes overall image quality and content)
@@ -400,6 +400,34 @@ features = await analyzer.extract_qualitative_features(
 )
 ```
 
+## 📁 Repository Structure
+
+Anton is organized into focused directories for easy navigation:
+
+```
+anton/
+├── 🧬 anton/           # Core framework (VLM pipeline, CMPO mapping)
+├── 📊 scripts/         # Analysis scripts
+│   ├── bbbc013/        # BBBC013 dataset tools
+│   ├── bbbc021/        # BBBC021 compound screen analysis  
+│   ├── demos/          # Demo and testing scripts
+│   └── utilities/      # General utilities and legacy tools
+├── 📚 examples/        # Usage examples and tutorials
+├── 🎯 prompts/         # VLM prompt templates (4-stage pipeline)
+├── 🧪 tests/           # Test suite
+└── 📖 docs/            # Documentation
+
+# Data and results are gitignored:
+# data/     - Datasets (BBBC013, BBBC021, sample images)
+# results/  - Analysis outputs and reports
+```
+
+**📋 Quick Navigation:**
+- **Start here**: `examples/` for tutorials
+- **Run analysis**: `scripts/` organized by dataset
+- **Core code**: `anton/` framework
+- **Full guide**: `DIRECTORY_STRUCTURE.md`
+
 ## Configuration
 
 The analysis pipeline can be configured through the `config` parameter:
@@ -419,8 +447,8 @@ config = {
         'confidence_threshold': 0.5
     },
     'cmpo': {
-        'ontology_path': 'data/cmpo.json',
-        'cache_path': 'data/cmpo_cache.pkl'
+        'ontology_path': 'anton/cmpo/data/cmpo.json',
+        'semantic_validation': True
     }
 }
 ```
