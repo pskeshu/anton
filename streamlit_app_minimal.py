@@ -62,18 +62,23 @@ with col1:
     st.subheader("🖼️ Image")
     
     if uploaded_file is not None:
+        print(f"DEBUG: File uploaded - {uploaded_file.name}, size: {uploaded_file.size}")
         try:
             # Reset file pointer to beginning (important!)
             uploaded_file.seek(0)
+            print("DEBUG: File pointer reset to beginning")
             
             # Simple PIL loading - most reliable
             image = Image.open(uploaded_file)
+            print(f"DEBUG: Image loaded successfully - size: {image.size}, mode: {image.mode}")
             
             # Resize if too large (prevent memory issues)
             max_size = (1024, 1024)
             if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
+                print(f"DEBUG: Resizing image from {image.size} to max {max_size}")
                 image.thumbnail(max_size, Image.Resampling.LANCZOS)
                 st.info(f"📏 Image resized to {image.size} for display")
+                print(f"DEBUG: Image resized to {image.size}")
             
             # Convert to RGB if needed
             if image.mode != 'RGB':
@@ -107,14 +112,18 @@ with col2:
     st.subheader("🧠 Analysis Results")
     
     if analyze_btn and uploaded_file is not None:
+        print("DEBUG: Analysis button clicked")
         try:
             # Simple mock analysis to test if basic functionality works
             st.success("✅ Analysis Started!")
+            print("DEBUG: Analysis started successfully")
             
             with st.spinner("Processing..."):
                 # Mock processing
                 import time
+                print("DEBUG: Starting mock processing...")
                 time.sleep(2)
+                print("DEBUG: Mock processing complete")
             
             # Mock results
             st.markdown("### 📊 Mock Analysis Results")
