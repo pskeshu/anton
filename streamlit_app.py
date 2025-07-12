@@ -2,9 +2,8 @@
 """
 Streamlit App Entry Point for Anton Microscopy Analysis
 
-This is the main entry point for Streamlit Cloud deployment.
-Using minimal version to avoid crashes.
+Testing with absolute minimal version to isolate backend issues.
 """
 
-# Import the minimal UI (crash-safe version)
-from streamlit_app_minimal import *
+# Import absolutely minimal test
+from test_minimal import *
