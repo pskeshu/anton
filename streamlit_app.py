@@ -3,8 +3,8 @@
 Streamlit App Entry Point for Anton Microscopy Analysis
 
 This is the main entry point for Streamlit Cloud deployment.
-It simply imports and runs the main UI module.
+Using minimal version to avoid crashes.
 """
 
-# Import the main UI
-from anton_simple_ui import *
+# Import the minimal UI (crash-safe version)
+from streamlit_app_minimal import *
