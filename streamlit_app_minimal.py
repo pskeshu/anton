@@ -27,6 +27,9 @@ st.set_page_config(
 st.title("🔬 Anton Microscopy Analysis")
 st.markdown("**Simple Interface**: Upload image → See basic analysis")
 
+# Debug info container
+debug_container = st.empty()
+
 # Sidebar
 st.sidebar.header("🎛️ Controls")
 
@@ -62,7 +65,9 @@ with col1:
     st.subheader("🖼️ Image")
     
     if uploaded_file is not None:
-        print(f"DEBUG: File uploaded - {uploaded_file.name}, size: {uploaded_file.size}")
+        debug_msg = f"🐛 DEBUG: File uploaded - {uploaded_file.name}, size: {uploaded_file.size}"
+        print(debug_msg)
+        debug_container.info(debug_msg)
         try:
             # Reset file pointer to beginning (important!)
             uploaded_file.seek(0)
@@ -70,7 +75,9 @@ with col1:
             
             # Simple PIL loading - most reliable
             image = Image.open(uploaded_file)
-            print(f"DEBUG: Image loaded successfully - size: {image.size}, mode: {image.mode}")
+            debug_msg2 = f"🐛 DEBUG: Image loaded successfully - size: {image.size}, mode: {image.mode}"
+            print(debug_msg2)
+            debug_container.success(debug_msg2)
             
             # Resize if too large (prevent memory issues)
             max_size = (1024, 1024)
@@ -101,7 +108,9 @@ with col1:
             st.caption(f"Size: {st.session_state.current_image.size} | Mode: {st.session_state.current_image.mode}")
             
         except Exception as e:
-            st.error(f"Error loading image: {e}")
+            error_msg = f"🐛 DEBUG: Error loading image: {e}"
+            st.error(error_msg)
+            debug_container.error(error_msg)
             # Don't show full traceback to users - just log it
             print(f"Image loading error: {traceback.format_exc()}")
     else:
