@@ -204,13 +204,29 @@ with col1:
     elif uploaded_file:
         # Uploaded image
         try:
-            # Save uploaded file temporarily
-            temp_path = f"temp_{uploaded_file.name}"
-            with open(temp_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
+            # Use BytesIO to avoid file system issues in cloud deployment
+            from io import BytesIO
+            import tempfile
             
-            loader = ImageLoader()
-            current_image = loader.load(temp_path)
+            # Create a temporary file that gets cleaned up automatically
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{uploaded_file.name}") as tmp_file:
+                tmp_file.write(uploaded_file.getbuffer())
+                temp_path = tmp_file.name
+            
+            # Try to load with ImageLoader first, fallback to PIL/OpenCV
+            try:
+                loader = ImageLoader()
+                current_image = loader.load(temp_path)
+            except Exception as loader_error:
+                st.warning(f"ImageLoader failed: {loader_error}, trying fallback...")
+                # Fallback to PIL
+                from PIL import Image
+                import numpy as np
+                pil_img = Image.open(temp_path)
+                current_image = np.array(pil_img)
+                if len(current_image.shape) == 3 and current_image.shape[2] == 3:
+                    # Convert RGB to grayscale for analysis
+                    current_image = np.mean(current_image, axis=2).astype(np.uint8)
             image_to_analyze = temp_path
             
             # Image display controls (same as above)
@@ -267,6 +283,13 @@ with col1:
             
         except Exception as e:
             st.error(f"Error loading uploaded image: {e}")
+            st.info("Please try uploading a different image format (PNG, JPG, TIFF, BMP)")
+            # Clean up temp file if it exists
+            try:
+                if 'temp_path' in locals() and os.path.exists(temp_path):
+                    os.remove(temp_path)
+            except:
+                pass
     else:
         st.info("👆 Select or upload an image to analyze")
 
@@ -435,8 +458,12 @@ with col2:
                     st.error(f"CMPO mapping failed: {e}")
             
             # Clean up temp file if it exists
-            if uploaded_file and os.path.exists(f"temp_{uploaded_file.name}"):
-                os.remove(f"temp_{uploaded_file.name}")
+            if uploaded_file and 'temp_path' in locals():
+                try:
+                    if os.path.exists(temp_path):
+                        os.remove(temp_path)
+                except:
+                    pass
                 
         except Exception as e:
             progress_bar.empty()
