@@ -45,13 +45,18 @@ else:
 for status in api_status:
     st.sidebar.write(status)
 
-# Simple file upload with unique key
+# Simple file upload with unique key - avoid st.rerun() issues
 st.sidebar.subheader("📁 Upload Image")
+
+# Use session state to track upload state to avoid rerun issues
+if 'upload_key' not in st.session_state:
+    st.session_state.upload_key = 0
+
 uploaded_file = st.sidebar.file_uploader(
     "Choose an image", 
     type=['png', 'jpg', 'jpeg', 'tiff', 'bmp'],
     help="Upload microscopy image",
-    key="image_uploader"  # Add unique key
+    key=f"image_uploader_{st.session_state.upload_key}"  # Dynamic key
 )
 
 # Analysis button with unique key
