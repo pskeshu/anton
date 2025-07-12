@@ -39,6 +39,10 @@ except ImportError as e:
 st.title("🔬 Anton Microscopy Analysis")
 st.markdown("**Simple Interface**: Load image → Click analyze → See VLM analysis + CMPO phenotypes")
 
+# Add helpful info for cloud users
+if not Path("data/bbbc013/BBBC013_v1_images_bmp").exists():
+    st.info("💡 **Demo Mode**: Upload your own microscopy images to test the analysis pipeline. The app works with PNG, JPG, TIFF, and BMP formats.")
+
 # Check if Anton is available
 if not anton_available:
     st.error(f"❌ Anton not available: {import_error}")
@@ -98,12 +102,13 @@ if dataset_available:
             help="Upload your own microscopy image"
         )
 else:
-    st.sidebar.warning("⚠️ BBBC013 dataset not found")
+    # Cloud deployment - dataset not included for size reasons
+    st.sidebar.info("📁 Upload your own microscopy images")
     image_path = None
     uploaded_file = st.sidebar.file_uploader(
         "Upload Image", 
         type=['png', 'jpg', 'jpeg', 'tiff', 'bmp'],
-        help="Upload your own microscopy image"
+        help="Upload your own microscopy image for analysis"
     )
 
 # Analysis controls
