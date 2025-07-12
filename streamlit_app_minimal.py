@@ -11,6 +11,10 @@ import numpy as np
 from PIL import Image
 import tempfile
 import traceback
+import gc  # Garbage collection
+
+# Configure PIL to handle large images better
+Image.MAX_IMAGE_PIXELS = None  # Remove PIL size limit
 
 # Setup page
 st.set_page_config(
@@ -38,16 +42,17 @@ else:
 for status in api_status:
     st.sidebar.write(status)
 
-# Simple file upload
+# Simple file upload with unique key
 st.sidebar.subheader("📁 Upload Image")
 uploaded_file = st.sidebar.file_uploader(
     "Choose an image", 
     type=['png', 'jpg', 'jpeg', 'tiff', 'bmp'],
-    help="Upload microscopy image"
+    help="Upload microscopy image",
+    key="image_uploader"  # Add unique key
 )
 
-# Analysis button
-analyze_btn = st.sidebar.button("🚀 Analyze", type="primary")
+# Analysis button with unique key
+analyze_btn = st.sidebar.button("🚀 Analyze", type="primary", key="analyze_button")
 
 # Main content
 col1, col2 = st.columns([1, 1])
@@ -58,22 +63,42 @@ with col1:
     
     if uploaded_file is not None:
         try:
+            # Reset file pointer to beginning (important!)
+            uploaded_file.seek(0)
+            
             # Simple PIL loading - most reliable
             image = Image.open(uploaded_file)
+            
+            # Resize if too large (prevent memory issues)
+            max_size = (1024, 1024)
+            if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
+                image.thumbnail(max_size, Image.Resampling.LANCZOS)
+                st.info(f"📏 Image resized to {image.size} for display")
             
             # Convert to RGB if needed
             if image.mode != 'RGB':
                 image = image.convert('RGB')
             
+            # Store in session state to prevent reprocessing
+            if 'current_image' not in st.session_state or st.session_state.get('uploaded_filename') != uploaded_file.name:
+                # Clear old image from memory
+                if 'current_image' in st.session_state:
+                    del st.session_state.current_image
+                    gc.collect()
+                
+                st.session_state.current_image = image
+                st.session_state.uploaded_filename = uploaded_file.name
+            
             # Display image
-            st.image(image, caption=f"Uploaded: {uploaded_file.name}", width=400)
+            st.image(st.session_state.current_image, caption=f"Uploaded: {uploaded_file.name}", width=400)
             
             # Basic info
-            st.caption(f"Size: {image.size} | Mode: {image.mode}")
+            st.caption(f"Size: {st.session_state.current_image.size} | Mode: {st.session_state.current_image.mode}")
             
         except Exception as e:
             st.error(f"Error loading image: {e}")
-            st.code(traceback.format_exc())
+            # Don't show full traceback to users - just log it
+            print(f"Image loading error: {traceback.format_exc()}")
     else:
         st.info("👆 Upload an image to start")
 
