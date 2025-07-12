@@ -8,6 +8,6 @@ requests
 google-generativeai
 anthropic
 python-dotenv
-streamlit
+streamlit==1.28.1
 plotly
 networkx
