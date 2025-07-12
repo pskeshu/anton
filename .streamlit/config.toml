@@ -1,0 +1,18 @@
+[global]
+
+# Increase file upload size limit for large microscopy images
+maxUploadSize = 200
+
+[server]
+# Auto-reload when files change in development
+fileWatcherType = "auto"
+
+# Run on specific port
+port = 8501
+
+[theme]
+# Optional: Customize app appearance
+primaryColor = "#1f77b4"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#262730"
