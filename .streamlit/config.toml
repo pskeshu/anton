@@ -1,12 +1,8 @@
-[global]
-
-# Increase file upload size limit for large microscopy images
-maxUploadSize = 200
-
 [server]
-# Auto-reload when files change in development
+# Increase file upload size limit for large microscopy images (in MB)
+maxUploadSize = 200
+# Auto-reload when files change in development  
 fileWatcherType = "auto"
-
 # Run on specific port
 port = 8501
 
