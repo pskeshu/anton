@@ -1,3 +1,13 @@
+---
+title: Anton Microscopy Analysis
+emoji: 🔬
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+license: mit
+---
+
 # Anton 🔬
 
 **AI-powered microscopy analysis that speaks biology's language**
